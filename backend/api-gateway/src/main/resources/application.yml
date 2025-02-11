@@ -1,0 +1,34 @@
+server:
+  port: 8761
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: blog-user-service
+          uri: lb://BLOG-USER
+          predicates:
+            - Path=/user/**
+        - id: blog-order-service
+          uri: lb://BLOG-ORDER
+          predicates:
+            - Path=/order/**
+        - id: blog-login-service
+          uri: lb://BLOG-LOGIN
+          predicates:
+            - Path=/login/**
+        - id: blog-comment-service
+          uri: lb://BLOG-COMMENT
+          predicates:
+            - Path=/comment/**
+
+eureka:
+  client:
+    serviceUrl:
+      # ?? ???(ec2)?? ?? ??? localhost? ??? ??? ???? ?????
+      defaultZone: "http://localhost:8761/eureka/"
+    registerWithEureka: false
+    fetchRegistry: false
+  server:
+    enableSelfPreservation: false
