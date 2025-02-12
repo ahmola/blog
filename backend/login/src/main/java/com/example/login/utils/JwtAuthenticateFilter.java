@@ -18,8 +18,8 @@ import java.io.IOException;
 @Component
 public class JwtAuthenticateFilter extends OncePerRequestFilter { // securityfilterchain에 적용
 
-    private JwtUtils jwtUtils;
-    private CustomUserDetailService customUserDetailService;
+    private final JwtUtils jwtUtils;
+    private final CustomUserDetailService customUserDetailService;
 
     @Override
     protected void doFilterInternal(

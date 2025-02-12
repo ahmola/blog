@@ -5,21 +5,21 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequestMapping("/login")
 @RequiredArgsConstructor
 @RestController
 public class AuthController {
 
-    private CustomUserDetailService customUserDetailService;
-    private JwtUtils jwtUtils;
-    private AuthenticationManager authenticationManager;
-    private PasswordEncoder passwordEncoder;
+    private final CustomUserDetailService customUserDetailService;
+    private final JwtUtils jwtUtils;
+    private final AuthenticationManager authenticationManager;
+    private final PasswordEncoder passwordEncoder;
 
     @PostMapping("/signup")
     public ResponseEntity<String> signup(@RequestBody User user) {
@@ -27,11 +27,18 @@ public class AuthController {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         // db에 저장
         return new ResponseEntity<>(
-                customUserDetailService.save(user).getUsername(), HttpStatus.OK);
+                customUserDetailService.save(user).getUsername(), HttpStatus.CREATED);
     }
 
     @PostMapping("/signin")
     public ResponseEntity<String> signin(@RequestBody User user) {
-        return new ResponseEntity<>()
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                user.getUsername(), user.getPassword()));
+        return new ResponseEntity<>(jwtUtils.generateToken(user.getUsername()), HttpStatus.OK);
+    }
+
+    @GetMapping("/showall")
+    public ResponseEntity<List<User>> showall(){
+        return new ResponseEntity<>(customUserDetailService.showall(), HttpStatus.OK);
     }
 }

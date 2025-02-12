@@ -4,6 +4,10 @@
 
       ssh -i /path/to/your-key.pem ec2-user@<EC2-PUBLIC-IP>
 
+### dockerfile 빌드 전에 jar 파일 생성
+
+      ./gradlew clean build
+
 ### dockerfile로 이미지 빌드
 
       docker build -t 이미지이름 -f dockerfile.식별가능한이름 .

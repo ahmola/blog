@@ -19,8 +19,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 public class SecurityConfig {
 
-    private JwtAuthenticateFilter jwtAuthenticateFilter;
-    private CustomUserDetailService customUserDetailService;
+    private final JwtAuthenticateFilter jwtAuthenticateFilter;
+    private final CustomUserDetailService customUserDetailService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -42,13 +42,18 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf().disable()
+                .csrf(csrf -> csrf.disable())
+                .headers(headers
+                        -> headers.frameOptions(frame -> frame.disable()))
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http
                 .authorizeHttpRequests(auth -> {
-                    // 로그인 관련 기능에는 접근 가능
-                    auth.requestMatchers("/login/**").permitAll();
+                    // h2콘솔 접근, 나중에는 없앨 것!
+                    auth.requestMatchers("/h2-console/**").permitAll();
+                    // 로그인 관련 기능에는 누구나 접근 가능
+                    auth.requestMatchers("/login/signin").permitAll();
+                    auth.requestMatchers("/login/signup").permitAll();
                     // 나머지는 인증 요구
                     auth.anyRequest().authenticated();
                 });

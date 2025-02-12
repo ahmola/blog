@@ -4,15 +4,20 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Date;
 
+@RequiredArgsConstructor
 @Component
 public class JwtUtils {
-    private final String secret = "thisisthesecretyoucannotchange";
-    private final long expirationTime = 1000 * 60 * 60; // 1시간
+    @Value( "${jwt.secret}")
+    private String secret = "thisisthescretyoucannotchangethisisthescretyoucannotchangethisisthescretyoucannotchange";
+    @Value( "${jwt.expiration}")
+    private long expirationTime; // 1시간
 
     private final Key key = Keys.hmacShaKeyFor(secret.getBytes());
 
