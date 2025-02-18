@@ -1,0 +1,35 @@
+jwt:
+  secret: "thisisthesecretkey"
+  expiration: 3600000
+server:
+  port: 8081
+
+spring:
+  application:
+    name: loginservice
+
+  # mysql
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/blog
+    username: root
+    password: youngseo0@
+    initialization-mode: always
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+
+  # netflix eureka client
+  cloud:
+    discovery:
+      enabled: true
+      service-id: login-service
+    eureka:
+      client:
+        service-url:
+          # need to be changed when pull into EC2 Instance
+          defaultZone: http://localhost:8761/eureka/
