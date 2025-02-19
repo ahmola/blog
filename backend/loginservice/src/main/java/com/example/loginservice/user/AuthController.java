@@ -7,15 +7,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RequestMapping("/auth")
 @RestController
 public class AuthController {
+    private final AuthenticationManager authenticationManager;
+
     private final JwtUtil jwtUtil;
 
     private final UserService userService;
@@ -35,7 +34,13 @@ public class AuthController {
     @PostMapping("/signin")
     public ResponseEntity<String> signin(@RequestBody UserDTO userDTO){
         // 토큰 발급
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userDTO.getUsername(),  userDTO.getPassword()));
         return new ResponseEntity<>(jwtUtil.generateToken(userDTO.getUsername()), HttpStatus.OK);
     }
 
+    // test
+    @GetMapping("/test")
+    public ResponseEntity<String> test(){
+        return new ResponseEntity<>("test success", HttpStatus.OK);
+    }
 }

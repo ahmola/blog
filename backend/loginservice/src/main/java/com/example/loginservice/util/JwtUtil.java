@@ -5,26 +5,31 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Date;
 
+@Slf4j
 @RequiredArgsConstructor
 @Component
 public class JwtUtil {
 
+    private static final Logger log = LoggerFactory.getLogger(JwtUtil.class);
     @Value("${jwt.secret}")
     private String secret;
 
     @Value("${jwt.expiration}")
-    private Long expiration;
+    private long expiration;
 
     public String generateToken(String username){
         return Jwts.builder()
                 .setSubject(username)   // 유저 이름
-                .setIssuedAt(new Date())    // 생성일
+                .setIssuedAt(new Date(System.currentTimeMillis()))    // 생성일
                 .setExpiration(new Date(System.currentTimeMillis()+expiration)) // 만료일
                 .signWith(Keys.hmacShaKeyFor(secret.getBytes()), SignatureAlgorithm.HS256)  // 서명, 위조 방지용
                 .compact(); // 토큰 생성
@@ -44,8 +49,8 @@ public class JwtUtil {
     }
 
     // 만료되었는지 확인
-    public boolean isExpired(String token){
-        return extractClaims(token).getExpiration().before(new Date());
+    public boolean isNotExpired(String token){
+        return extractClaims(token).getExpiration().after(new Date(System.currentTimeMillis()));
     }
 
     // 유저 이름 추출
@@ -56,7 +61,7 @@ public class JwtUtil {
     // 토큰이 유효한지 검사
     public boolean validateToken(String token, String username){
         try{
-            return extractUsername(token).equals(username) && isExpired(token);
+            return extractUsername(token).equals(username) && isNotExpired(token);
         }catch (Exception e){
             throw new RuntimeException("Invalid Token");
         }

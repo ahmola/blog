@@ -1,12 +1,12 @@
 jwt:
-  secret: "thisisthesecretkey"
+  secret: "thisisthesecretkeythisisthesecretkeythisisthesecretkeythisisthesecretkeythisisthesecretkey"
   expiration: 3600000
 server:
   port: 8081
 
 spring:
   application:
-    name: loginservice
+    name: auth-service
 
   # mysql
   datasource:
@@ -27,7 +27,7 @@ spring:
   cloud:
     discovery:
       enabled: true
-      service-id: login-service
+      service-id: auth-service
     eureka:
       client:
         service-url:

@@ -17,9 +17,9 @@ public class GatewayConfig {
     public RouteLocator routes(RouteLocatorBuilder builder) {
         return builder.routes()
                 // 로그인 서비스 라우팅
-                .route("login-service",
+                .route("auth-service",
                         r -> r.path("/auth/**")
-                                .uri("lb://login-service"))
+                                .uri("lb://auth-service"))
                 // 유저 서비스 라우팅
                 .route("user-service",
                         r -> r.path("/user/**")

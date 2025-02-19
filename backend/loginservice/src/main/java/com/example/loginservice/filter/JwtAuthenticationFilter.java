@@ -7,6 +7,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +16,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+@Slf4j
 @RequiredArgsConstructor
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -36,11 +38,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if(authHeader != null && authHeader.startsWith("Bearer ")){
             // 토큰 추출
             String token = authHeader.substring(7);
+            logger.info(token);
 
             try {
                 // 토큰에서 유저 이름을 가져옴
                 String username = jwtUtil.extractUsername(token);
-
+                logger.info(username);
                 // 이름이 비어있지 않고 아직 인증되지 않았다면, 토큰 발급
                 // 이름이 비었거나 인증이 이미 되어있다면 아무것도 할 필요가 없음
                 if (username != null && SecurityContextHolder.getContext().getAuthentication() == null){
@@ -53,6 +56,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                 new UsernamePasswordAuthenticationToken(
                                         userDetails.getUsername(), null, null
                                 );
+                        logger.info(auth.toString());
                         // 컨텍스트에 유저가 인증되었다고 저장
                         SecurityContextHolder.getContext().setAuthentication(auth);
                     }
