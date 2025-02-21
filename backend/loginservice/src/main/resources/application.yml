@@ -17,11 +17,12 @@ spring:
     name: auth-service
 
   # mysql
+  # if you access db with public wifi, port 3306 will be blocked
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://mysql:3306/blog
-    username: root
-    password: youngseo0@
+    url: jdbc:mysql://blog1.cvciag64kgix.ap-northeast-2.rds.amazonaws.com:3306/blog?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: user
+    password: 12345678
     initialization-mode: always
   jpa:
     hibernate:
