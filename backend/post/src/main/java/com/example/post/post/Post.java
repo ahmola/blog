@@ -31,7 +31,11 @@ public class Post {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
+    @Column(nullable = false)
     private Long userId;
+
+    @Column(nullable = false)
+    private String username;
 
     // comment는 feign client로 받음
 }

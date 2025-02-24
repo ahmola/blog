@@ -1,3 +1,16 @@
+management:
+  metrics:
+    enable:
+      system: false
+    enabled: false
+  endpoint:
+    metrics:
+      enabled: false
+  endpoints:
+    enabled: false
+    web:
+      exposure:
+        include: health.info
 server:
   # when pull at ec2, need to be changed, this address allow accessing from all ip
   host: 0.0.0.0

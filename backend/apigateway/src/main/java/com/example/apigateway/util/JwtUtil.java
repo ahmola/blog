@@ -24,7 +24,7 @@ public class JwtUtil {
     public boolean validateToken(String token){
         try {
             // 만료되지 않았다면
-            return extractClaims(token).getExpiration().before(new Date());
+            return extractClaims(token).getExpiration().after(new Date(System.currentTimeMillis()));
         }catch (Exception e){
             // 토큰 내용을 검출하는 도중 오류가 발생하면
             return false;

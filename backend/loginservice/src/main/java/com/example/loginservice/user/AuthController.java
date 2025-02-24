@@ -21,12 +21,19 @@ public class AuthController {
     // 의존성 무한 루프로 서비스가 아닌 컨트롤러에서 암호화 진행
     private final PasswordEncoder passwordEncoder;
 
+    private final UserClient userClient;
+
     // 회원가입
     @PostMapping("/signup")
     public ResponseEntity<User> signup(@RequestBody UserDTO userDTO){
+        // 유저 생성
         User user = new User();
         user.setUsername(userDTO.getUsername());
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        // user-service에 유저 생성 요청
+        UserCreateRequest userCreateRequest = new UserCreateRequest(userDTO.getUsername(), "USER");
+        userClient.postRequestForCreateUserToUserService("AUTH", userCreateRequest);
+
         return new ResponseEntity<>(userService.save(user), HttpStatus.CREATED);
     }
 

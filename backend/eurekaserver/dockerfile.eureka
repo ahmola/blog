@@ -2,6 +2,6 @@ FROM openjdk:17
 
 COPY /build/libs/eurekaserver-0.0.1-SNAPSHOT.jar eureka.jar
 
-ENTRYPOINT ["java", "-jar", "eureka.jar"]
+ENTRYPOINT ["java", "-XX:-UseContainerSupport", "-Dmanagement.metrics.enable.system=false", "-XshowSettings:properties", "-jar", "eureka.jar"]
 
 EXPOSE 8761
