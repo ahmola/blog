@@ -1,0 +1,41 @@
+version: '4'
+services:
+  eureka:
+    image: eureka
+    container_name: eureka
+    ports:
+      - "8761:8761"
+    networks:
+      - eureka-network
+  gateway:
+    image: gateway
+    container_name: gateway
+    depends_on:
+      - eureka
+    ports:
+      - "8080:8080"
+    networks:
+      - eureka-network
+  jwt:
+    image: jwt
+    container_name: jwt
+    depends_on:
+      - eureka
+    ports:
+      - "8081:8081"
+    networks:
+      - eureka-network
+
+  user:
+    image: user
+    container_name: user
+    depends_on:
+      - eureka
+    ports:
+      - "8082:8082"
+    networks:
+      - eureka-network
+
+networks:
+  eureka-network:
+    driver: bridge
