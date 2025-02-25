@@ -1,7 +1,0 @@
-FROM openjdk:17
-
-COPY /build/libs/~ jwt.jar
-
-ENTRYPOINT ["java", "-jar", "jwt.jar"]
-
-EXPOSE 8085

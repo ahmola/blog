@@ -1,24 +1,26 @@
-package com.example.apigateway.util;
+package com.example.apigateway.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
-import java.nio.charset.StandardCharsets;
-import java.security.Key;
 import java.util.Date;
 
-@Component
-public class JwtUtil {
+@Slf4j
+@RequiredArgsConstructor
+@Service
+public class JwtService {
 
     @Value("${jwt.secret}")
     private String secret;
+    @Value("${jwt.expiration}")
+    private Long expiration;
 
     // 토큰이 유효한지 검사
     public boolean validateToken(String token){
@@ -28,6 +30,19 @@ public class JwtUtil {
         }catch (Exception e){
             // 토큰 내용을 검출하는 도중 오류가 발생하면
             return false;
+        }
+    }
+
+    public String generateToken(String username){
+        try {
+            return Jwts.builder()
+                    .subject(username)
+                    .issuedAt(new Date(System.currentTimeMillis()))
+                    .expiration(new Date(System.currentTimeMillis()+expiration))
+                    .signWith(getSignInKey())
+                    .compact();
+        }catch (Exception e){
+            throw new RuntimeException("Error Occur during generation token : " + username);
         }
     }
 
