@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -13,11 +15,14 @@ public class UserService {
     private final UserRepository userRepository;
 
     public User DTOtoUser(UserDTO userDTO){
-        return User.builder()
-                .username(userDTO.getUsername())
-                .email(userDTO.getEmail())
-                .role(Role.valueOf(userDTO.getRole()))
-                .build();
+        User user = new User();
+        user.setId(userDTO.getId());
+        Optional.ofNullable(userDTO.getUsername()).ifPresent(user::setUsername);
+        Optional.ofNullable(userDTO.getEmail()).ifPresent(user::setEmail);
+        Optional.ofNullable(userDTO.getRole()).map(Role::valueOf).ifPresent(user::setRole);
+        Optional.ofNullable(userDTO.isNotBanned()).ifPresent(user::setNotBanned);
+
+        return user;
     }
 
     @Transactional
@@ -33,10 +38,10 @@ public class UserService {
     public User updateUser(UserDTO userDTO) {
         User user = userRepository.findById(userDTO.getId()).get();
         try {
-            user.setUsername(userDTO.getUsername());
-            user.setEmail(userDTO.getEmail());
+            user = DTOtoUser(userDTO);
         }catch (Exception e){
-            throw new RuntimeException("Error occurs during updating user " + userDTO.getUsername());
+            throw new RuntimeException("Error occurs during updating user "
+                    + userDTO.getUsername());
         }
         return userRepository.save(user);
     }

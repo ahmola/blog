@@ -20,4 +20,8 @@ public class UserDTO {
     private String email;
 
     private String Role;
+
+    private boolean isNotBanned;
+
+    private String createdAt;
 }
