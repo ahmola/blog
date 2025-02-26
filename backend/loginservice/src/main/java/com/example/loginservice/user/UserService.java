@@ -1,21 +1,16 @@
 package com.example.loginservice.user;
 
-import com.example.loginservice.util.JwtUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
 public class UserService implements UserDetailsService {
 
-    private final JwtUtil jwtUtil;
     private final UserRepository userRepository;
 
     // 중간에 끊기지 않게 트랜잭션 처리를 한다.

@@ -1,7 +1,7 @@
 package com.example.loginservice.filter;
 
+import com.example.loginservice.jwt.JwtClient;
 import com.example.loginservice.user.UserRepository;
-import com.example.loginservice.util.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,7 +23,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     // 의존성 무한 루프 문제로 서비스가 아닌 레포지토리 사용
     private final UserRepository userRepository;
-    private final JwtUtil jwtUtil;
+    private final JwtClient jwtClient;
 
     @Override
     protected void doFilterInternal(
@@ -36,13 +36,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         // 헤더가 비어있지 않고 알맞은 인증 방식이라면
         if(authHeader != null && authHeader.startsWith("Bearer ")){
-            // 토큰 추출
-            String token = authHeader.substring(7);
-            logger.info(token);
-
+            logger.info(authHeader);
             try {
                 // 토큰에서 유저 이름을 가져옴
-                String username = jwtUtil.extractUsername(token);
+                String username = jwtClient.extractUsername(authHeader).getBody();
                 logger.info(username);
                 // 이름이 비어있지 않고 아직 인증되지 않았다면, 토큰 발급
                 // 이름이 비었거나 인증이 이미 되어있다면 아무것도 할 필요가 없음
@@ -50,7 +47,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     // 유저 이름으로 유저를 가져옴
                     UserDetails userDetails = userRepository.findByUsername(username).get();
                     // 토큰이 유효한지 검사
-                    if(jwtUtil.validateToken(token, userDetails.getUsername())){
+                    if(Boolean.TRUE.equals(
+                            jwtClient.validateToken(authHeader).getBody())){
                         // 유효하면 토큰을 줌. 권한은 어차피 비어있고, 비밀번호는 비워둔다.
                         UsernamePasswordAuthenticationToken auth =
                                 new UsernamePasswordAuthenticationToken(

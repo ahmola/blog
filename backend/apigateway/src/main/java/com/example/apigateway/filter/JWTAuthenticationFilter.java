@@ -53,7 +53,7 @@ public class JWTAuthenticationFilter implements GatewayFilter, Ordered {
             return JwtError.onError(exchange, "Invalid Token", HttpStatus.UNAUTHORIZED);
 
         // 검증된 토큰에서 자격 증명을 가져옴
-        String username = jwtService.getUsernameFromToken(token);
+        String username = jwtService.extractUsername(token);
         log.info(JWTAuthenticationFilter.class.toString() + " authenticated user : " + username);
 
         // Response 헤더에 X-User-Id 정보 추가

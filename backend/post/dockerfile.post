@@ -1,0 +1,7 @@
+FROM openjdk:17
+
+COPY build/libs/post-0.0.1-SNAPSHOT.jar post.jar
+
+ENTRYPOINT ["java", "-jar", "post.jar"]
+
+EXPOSE 8083

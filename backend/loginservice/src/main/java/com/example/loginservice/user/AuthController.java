@@ -1,6 +1,6 @@
 package com.example.loginservice.user;
 
-import com.example.loginservice.util.JwtUtil;
+import com.example.loginservice.jwt.JwtClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
     private final AuthenticationManager authenticationManager;
 
-    private final JwtUtil jwtUtil;
+    private final JwtClient jwtClient;
 
     private final UserService userService;
     // 의존성 무한 루프로 서비스가 아닌 컨트롤러에서 암호화 진행
@@ -42,7 +42,7 @@ public class AuthController {
     public ResponseEntity<String> signin(@RequestBody UserDTO userDTO){
         // 토큰 발급
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userDTO.getUsername(),  userDTO.getPassword()));
-        return new ResponseEntity<>(jwtUtil.generateToken(userDTO.getUsername()), HttpStatus.OK);
+        return new ResponseEntity<>(jwtClient.generateToken(userDTO.getUsername()).getBody(), HttpStatus.OK);
     }
 
     // test

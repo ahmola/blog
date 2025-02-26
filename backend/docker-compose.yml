@@ -1,4 +1,5 @@
 version: '4'
+
 services:
   eureka:
     image: eureka
@@ -7,6 +8,7 @@ services:
       - "8761:8761"
     networks:
       - eureka-network
+
   gateway:
     image: gateway
     container_name: gateway
@@ -16,9 +18,10 @@ services:
       - "8080:8080"
     networks:
       - eureka-network
-  jwt:
-    image: jwt
-    container_name: jwt
+
+  auth:
+    image: auth
+    container_name: auth
     depends_on:
       - eureka
     ports:
@@ -33,6 +36,26 @@ services:
       - eureka
     ports:
       - "8082:8082"
+    networks:
+      - eureka-network
+
+  post:
+    image: post
+    container_name: post
+    depends_on:
+      - eureka
+    ports:
+      - "8083:8083"
+    networks:
+      - eureka-network
+
+  comment:
+    image: comment
+    container_name: comment
+    depends_on:
+      - eureka
+    ports:
+      - "8084:8084"
     networks:
       - eureka-network
 
