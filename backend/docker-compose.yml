@@ -58,6 +58,16 @@ services:
       - "8084:8084"
     networks:
       - eureka-network
+  
+  config:
+    image: config
+    container_name: config
+    depends_on:
+      - eureka
+    ports:
+      - "8888:8888"
+    networks:
+      - eureka-network
 
 networks:
   eureka-network:

@@ -12,11 +12,11 @@ public interface UserClient {
     @GetMapping("/user/isHeaderValidate")
     ResponseEntity<Boolean> isXUserIdHeaderValidate(
             @RequestHeader("Referer") String referer
-            ,@RequestParam String username);
+            ,@RequestParam(name = "username") String username);
 
     @GetMapping("/user")
-    ResponseEntity<String> getUserInfo(@RequestParam long userId);
+    ResponseEntity<String> getUserInfo(@RequestParam(name = "userId") long userId);
 
     @GetMapping("/user/validateUser")
-    ResponseEntity<Boolean> isUserNotBanned(@RequestParam long userId);
+    ResponseEntity<Boolean> isUserNotBanned(@RequestParam(name = "userId") long userId);
 }

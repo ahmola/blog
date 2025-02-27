@@ -7,6 +7,7 @@ import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -14,6 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.crypto.SecretKey;
 import java.util.Date;
 
+@RefreshScope
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -36,6 +38,7 @@ public class JwtService {
     }
 
     public String generateToken(String username){
+        log.info("generateToken with : " + username);
         try {
             return Jwts.builder()
                     .subject(username)
@@ -62,6 +65,7 @@ public class JwtService {
 
     public String extractUsername(String token) {
         Claims claims = extractClaims(token);
+        log.info("username : " + claims.getSubject());
         return claims.getSubject();
     }
 

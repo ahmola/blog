@@ -18,7 +18,7 @@ public class PostController {
     private final UserClient userClient;
 
     private boolean isValidateUser(long userId){
-        return userClient.isUserNotBanned(userId).getBody();
+        return Boolean.TRUE.equals(userClient.isUserNotBanned(userId).getBody());
     }
 
     // 유저의 모든 게시물 GET

@@ -40,9 +40,16 @@ public class AuthController {
     // 로그인
     @PostMapping("/signin")
     public ResponseEntity<String> signin(@RequestBody UserDTO userDTO){
-        // 토큰 발급
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userDTO.getUsername(),  userDTO.getPassword()));
-        return new ResponseEntity<>(jwtClient.generateToken(userDTO.getUsername()).getBody(), HttpStatus.OK);
+        return new ResponseEntity<>(
+                jwtClient.generateToken(userDTO.getUsername()).getBody(), HttpStatus.OK);
+    }
+
+    // user-service에서 유저 삭제 시 같이 cascade
+    @DeleteMapping
+    public ResponseEntity<Boolean> delete(@RequestParam long userId){
+        return new ResponseEntity<>(
+                userService.deleteById(userId), HttpStatus.OK
+        );
     }
 
     // test

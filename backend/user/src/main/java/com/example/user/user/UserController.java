@@ -52,6 +52,7 @@ public class UserController {
                 userService.updateUser(userDTO).toString(), HttpStatus.OK);
     }
 
+    // auth-service의 유저도 같이 삭제되어야함
     @DeleteMapping
     public ResponseEntity<Boolean> deleteUser(@RequestParam Long userId){
         return new ResponseEntity<>(userService.deleteUserById(userId), HttpStatus.OK);

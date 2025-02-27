@@ -47,22 +47,21 @@ public class JWTAuthenticationFilter implements GatewayFilter, Ordered {
         token = token.replace("Bearer ", "");
 
         boolean isValidate = jwtService.validateToken(token);
-        log.info("is token validate ? : " + isValidate);
-        // 토큰이 만료되거나 오류가 없는지 확인하고 있다면 에러
-        if(!isValidate)
-            return JwtError.onError(exchange, "Invalid Token", HttpStatus.UNAUTHORIZED);
-
-        // 검증된 토큰에서 자격 증명을 가져옴
         String username = jwtService.extractUsername(token);
         log.info(JWTAuthenticationFilter.class.toString() + " authenticated user : " + username);
+        log.info("is token validate ? : " + isValidate);
 
-        // Response 헤더에 X-User-Id 정보 추가
-        // 이 헤더는 토큰이 검증되었다는 표시로 서비스들이 토큰을 따로 검증할 필요없이 나중에 이 헤더의 유무만 확인하면 된다.
-        // 그러나 이는 만료된 토큰을 악용할 소지가 있으므로 나중에 Redis를 활용할 예정
-        // 어차피 도커 네트워크에 묶일 것이기 때문에 굳이 사용할 이유는 없으므로 일단은 deprecated
-        //        ServerHttpRequest modifiedRequest = request.mutate()
-        //        .header("X-User-Id", username)
-        //        .build();
+        // 토큰이 만료되거나 제대로 된 토큰인지 확인 확인하고 있다면 에러
+        if(!isValidate || username.isEmpty())
+            return JwtError.onError(exchange, "Invalid Token", HttpStatus.UNAUTHORIZED);
+
+        /* Response 헤더에 X-User-Id 정보 추가
+           이 헤더는 토큰이 검증되었다는 표시로 서비스들이 토큰을 따로 검증할 필요없이 나중에 이 헤더의 유무만 확인하면 된다.
+           그러나 이는 만료된 토큰을 악용할 소지가 있으므로 나중에 Redis를 활용할 예정
+           어차피 도커 네트워크에 묶일 것이기 때문에 굳이 사용할 이유는 없으므로 일단은 deprecated
+                   ServerHttpRequest modifiedRequest = request.mutate()
+                  .header("X-User-Id", username)
+                  .build(); */
         return chain.filter(exchange);
     }
 

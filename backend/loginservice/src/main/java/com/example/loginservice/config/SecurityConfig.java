@@ -20,7 +20,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 public class SecurityConfig {
 
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final UserService userService;
 
     @Bean
@@ -29,27 +28,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(){
-        // Data Access Object 인증 공급자 초기화
-        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
-        // UserDetailsService 주입
-        daoAuthenticationProvider.setUserDetailsService(userService);
-        // PasswordEncoder 주입
-        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
-
-        return new ProviderManager(daoAuthenticationProvider);
-    }
-
-    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
-
-        http
-                .csrf().disable();
-
-        http
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
         http
                 .authorizeHttpRequests(auth -> {
                             // 로그인 관련 기능은 열어둠
@@ -59,10 +38,6 @@ public class SecurityConfig {
                             auth.anyRequest().authenticated();
                         }
                 );
-
-        http
-                .addFilterBefore(   // jwt인증필터를 기본 인증 필터 앞에 추가함
-                        jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

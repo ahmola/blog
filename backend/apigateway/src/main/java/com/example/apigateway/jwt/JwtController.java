@@ -23,14 +23,17 @@ public class JwtController {
     private final JwtService jwtService;
 
     private String headerToToken(ServerHttpRequest request){
-        return Objects.requireNonNull(
-                request.getHeaders().getFirst(HttpHeaders.AUTHORIZATION))
+        String token = Objects.requireNonNull(
+                        request.getHeaders().getFirst(HttpHeaders.AUTHORIZATION))
                 .replace("Bearer ", "");
+        log.info("get token : " + token);
+        return token;
     }
 
     // 토큰 생성
     @PostMapping("/generateToken")
     public Mono<ResponseEntity<String>> generateToken(String username){
+        log.info("generate token of : " + username);
         return Mono.just(
                 new ResponseEntity<>(
                         jwtService.generateToken(username), HttpStatus.CREATED));
