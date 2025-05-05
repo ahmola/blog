@@ -10,6 +10,7 @@
 
         1. React+Vite로 웹 페이지를 구성
         2. 클라이언트는 Spring Cloud API Gateway와만 연결되어 서비스를 제공받는다.
+        3. 간단한 페이지이므로 굳이 EC2에 올리기보다는 Github Pages로 올리고자 함.
 
   - 백엔드(API Gateway : Port 8080, Netflix Eureka Server : Port 8761 Microservice : 8081 ~ 8084)
 
