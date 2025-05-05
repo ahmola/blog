@@ -1,0 +1,12 @@
+server:
+  port: 8081
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
+        web: DEBUG
+        gateway: DEBUG
+spring:
+  config:
+    import: classpath:/configs/db.yml

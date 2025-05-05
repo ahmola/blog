@@ -1,0 +1,39 @@
+version: '4'
+
+services:
+  config:
+    image: config
+    container_name: config
+    ports:
+      - "8888:8888"
+    networks:
+      - blog
+    environment:
+      - SPRING_PROFILES_ACTIVE=native
+      - SPRING_CLOUD_CONFIG_SERVER_NATIVE_SEARCH_LOCATIONS=classpath:/configs
+
+  discovery:
+    image: discovery
+    container_name: discovery
+    depends_on:
+      - config
+
+    ports:
+      - "8761:8761"
+    networks:
+      - blog
+
+  gateway:
+    image: gateway
+    container_name: gateway
+    depends_on:
+      - discovery
+
+    ports:
+      - "8080:8080"
+    networks:
+      - blog
+
+networks:
+  blog:
+    driver: bridge
