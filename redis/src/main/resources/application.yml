@@ -1,0 +1,38 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: redis
+  datasource:
+    url: jdbc:mysql://localhost:3306/blog?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul&characterEncoding=utf8&useUnicode=true
+    username: "park"
+    password: 12345678
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        show:
+          sql: false
+        format_sql: false
+  cache:
+    type: redis
+    redis:
+      time-to-live: 60s
+  redis:
+    host: localhost
+    port: 6379
+
+# health check
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: when_authorized
+  metrics:
+    tags:
+      application: blog-ms
