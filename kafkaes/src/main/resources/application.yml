@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: kafkaes
+  datasource:
+    url: jdbc:mysql://localhost:3306/blog
+    username: "root"
+    password: 1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        show:
+          sql: false
+        format_sql: false
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: group_id
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.LongDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.LongSerializer
+  elasticsearch:
+    uris: http://localhost:9200
