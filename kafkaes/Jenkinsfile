@@ -1,0 +1,36 @@
+pipeline {
+    agent any
+
+    stages{
+        stage('Git Checkout'){
+            steps{
+                git 'https://github.com/ahmola/blog.git'
+            }
+        }
+
+        stage('Build'){
+            steps{
+                sh './gradlew build'
+            }
+        }
+
+        stage('Test'){
+            steps{
+                sh './gradlew test'
+            }
+        }
+
+        stage('Docker Build'){
+            steps{
+                sh 'docker built -t spring.app'
+            }
+        }
+
+        stage('Deploy'){
+            steps{
+                sh 'docker-compose down && docker-compose up -d'
+            }
+        }
+    }
+
+}
