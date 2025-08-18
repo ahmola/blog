@@ -10,29 +10,29 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
-public class PostService {
-    private final PostRepository repository;
+public class CommentService {
+    private final CommentRepository repository;
 
-    @Cacheable(value = "post", key = "#id")
+    @Cacheable(value = "comment", key = "#id")
     @Transactional(readOnly = true)
-    public Post getPost(Long id){
+    public Comment getComment(Long id){
         return repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Post not found " + id));
+                .orElseThrow(() -> new EntityNotFoundException("Comment not found " + id));
     }
 
     // 생성 후 즉시 캐시 적재, 객체의 id를 저장
-    @CachePut(value = "post", key = "#result.id")
+    @CachePut(value = "comment", key = "#result.id")
     @Transactional
-    public Post createPost(Post post){
-        return repository.save(post);
+    public Comment createComment(Comment comment){
+        return repository.save(comment);
     }
 
     // 키 무효화
-    @CacheEvict(value = "post", key="#id")
+    @CacheEvict(value = "comment", key="#id")
     @Transactional
-    public void deletePost(Long id){
+    public void deleteComment(Long id){
         if(!repository.existsById(id)){
-            throw new EntityNotFoundException("Post not found : " + id);
+            throw new EntityNotFoundException("Comment not found : " + id);
         }
         repository.deleteById(id);
     }
