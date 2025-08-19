@@ -2,7 +2,7 @@ import http from 'k6/http';
 import { check, sleep } from 'k6';
 
 export const options = {
-  iterations: 10000, // 1만개의 요청
+  iterations: 100000, // 1만개의 요청
   vus: 50,  // 가상 유저 수
 };
 
