@@ -22,15 +22,15 @@ pipeline {
 
         stage('Docker Build'){
             steps{
-                sh 'docker built -t spring.app .'
+                sh 'docker built -t post.jar .'
             }
         }
 
-        stage('Deploy'){
-            steps{
-                sh 'docker-compose down && docker-compose up -d'
-            }
-        }
+//         stage('Deploy'){
+//             steps{
+//                 sh 'docker-compose down && docker-compose up -d'
+//             }
+//         }
     }
 
 }
