@@ -7,18 +7,18 @@ export const options = {
 };
 
 export default function () {
-  const url = 'http://127.0.0.1:8080/api/v1/post';
-  const payload = JSON.stringify({
-      title: `테스트 제목 ${Math.random()}`,
+    const params = {
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    };
+
+    const url = 'http://127.0.0.1:8080/api/v1/comment';
+    const payload = JSON.stringify({
+      userId: `테스트 유저 ${Math.floor(Math.random() * 10) + 1}`,
       content: `테스트 내용 ${Math.random()}`
-  });
+    });
 
-  const params = {
-    headers: {
-        'Content-Type': 'application/json',
-    },
-  };
-
-  http.post(url, payload, params);
-  sleep(0.1);       // RPS 조절
+    http.post(url, payload, params);
+    sleep(0.1);       // RPS 조절
 }

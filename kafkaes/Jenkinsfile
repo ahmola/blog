@@ -26,11 +26,18 @@ pipeline {
             }
         }
 
-//         stage('Deploy'){
-//             steps{
-//                 sh 'docker-compose down && docker-compose up -d'
-//             }
-//         }
+        stage('Deploy to Remote Server') {
+            steps {
+                // SSH key 기반 인증 필요
+                sh '''
+                scp -i ~/.ssh/id_rsa build/libs/myapp.jar ubuntu@1.2.3.4:/home/ubuntu/myapp/
+                ssh -i ~/.ssh/id_rsa ubuntu@1.2.3.4 << EOF
+                pkill -f 'java -jar' || true
+                nohup java -jar /home/ubuntu/myapp/myapp.jar > /dev/null 2>&1 &
+                EOF
+                '''
+            }
+        }
     }
 
 }

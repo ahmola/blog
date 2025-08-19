@@ -7,14 +7,14 @@ import { SharedArray } from 'k6/data';
 const postIds = new SharedArray('randomPostIds', function () {
   const ids = new Set();
   while (ids.size < 200) {
-    ids.add(Math.floor(Math.random() * 10000) + 1);
+    ids.add(Math.floor(Math.random() * 100000) + 1);
   }
   return Array.from(ids);
 });
 
 export let options = {
   vus: 10,          // 동시 사용자 수
-  iterations: 200,  // 총 요청 수 (RDB와 ES 각각 100씩)
+  iterations: 200,  // 총 반복 수 (각 url에 200*200=4만개씩, 총 8만개)
 };
 
 let rdbTrend = new Trend('RDB_Response_Time');
